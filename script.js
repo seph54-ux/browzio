@@ -170,7 +170,7 @@ const data = {
         { name: "DevLuxury", url: "https://devluxury.com", desc: "Download paid softwares for free" }
     ],
     "AI Discovery": [
-        { name: "Get Inference AI Radar", url: "https://getinference.com", desc: "AI tools list" },
+        { name: "Get Inference AI Radar", url: "https://www.aiwizard.ai/", desc: "AI tools list" },
         { name: "Digital Samaritan", url: "https://digitalsamaritan.co", desc: "Mother of all powerful websites" }
     ]
 };
