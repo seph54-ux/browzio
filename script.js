@@ -316,3 +316,149 @@ scrollToTopBtn.addEventListener('click', () => {
 
 // Add CSS smooth scrolling support for older browsers
 document.documentElement.style.scrollBehavior = 'smooth';
+
+// Ko-fi Modal Functionality
+const kofiLink = document.getElementById('kofiLink');
+
+kofiLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    
+    // Create modal overlay
+    const modalOverlay = document.createElement('div');
+    modalOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        animation: fadeIn 0.3s ease;
+    `;
+    
+    // Create modal content
+    const modalContent = document.createElement('div');
+    modalContent.style.cssText = `
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 25px;
+        padding: 20px;
+        max-width: 90vw;
+        max-height: 90vh;
+        overflow: hidden;
+        box-shadow: 
+            20px 20px 60px rgba(0, 0, 0, 0.1),
+            -20px -20px 60px rgba(255, 255, 255, 0.8);
+        position: relative;
+        animation: modalSlideIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    `;
+    
+    // Apply dark mode styles if active
+    if (document.body.classList.contains('dark-mode')) {
+        modalContent.style.background = 'rgba(30, 41, 59, 0.95)';
+        modalContent.style.border = '1px solid rgba(148, 163, 184, 0.2)';
+        modalContent.style.boxShadow = `
+            20px 20px 60px rgba(0, 0, 0, 0.3),
+            -20px -20px 60px rgba(51, 65, 85, 0.1)
+        `;
+    }
+    
+    // Create close button
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '×';
+    closeBtn.style.cssText = `
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: none;
+        border: none;
+        font-size: 30px;
+        color: #667eea;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        z-index: 10001;
+    `;
+    
+    if (document.body.classList.contains('dark-mode')) {
+        closeBtn.style.color = '#60a5fa';
+    }
+    
+    closeBtn.addEventListener('mouseenter', () => {
+        closeBtn.style.transform = 'scale(1.2)';
+        closeBtn.style.color = '#FF5F5F';
+    });
+    
+    closeBtn.addEventListener('mouseleave', () => {
+        closeBtn.style.transform = 'scale(1)';
+        closeBtn.style.color = document.body.classList.contains('dark-mode') ? '#60a5fa' : '#667eea';
+    });
+    
+    // Create iframe
+    const iframe = document.createElement('iframe');
+    iframe.id = 'kofiframe';
+    iframe.src = 'https://ko-fi.com/philjosephorlina/?hidefeed=true&widget=true&embed=true&preview=true';
+    iframe.style.cssText = `
+        border: none;
+        width: 100%;
+        height: 712px;
+        background: #f9f9f9;
+        border-radius: 15px;
+    `;
+    iframe.title = 'philjosephorlina';
+    
+    // Add CSS animations
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes modalSlideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(-30px) scale(0.9);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Close modal function
+    const closeModal = () => {
+        modalOverlay.style.animation = 'fadeIn 0.3s ease reverse';
+        modalContent.style.animation = 'modalSlideIn 0.3s ease reverse';
+        setTimeout(() => {
+            document.body.removeChild(modalOverlay);
+            document.head.removeChild(style);
+        }, 300);
+    };
+    
+    // Event listeners
+    closeBtn.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+    });
+    
+    // Escape key to close
+    document.addEventListener('keydown', function escapeHandler(e) {
+        if (e.key === 'Escape') {
+            closeModal();
+            document.removeEventListener('keydown', escapeHandler);
+        }
+    });
+    
+    // Assemble modal
+    modalContent.appendChild(closeBtn);
+    modalContent.appendChild(iframe);
+    modalOverlay.appendChild(modalContent);
+    document.body.appendChild(modalOverlay);
+});
